@@ -136,17 +136,28 @@ Always prefer function-level or line-range references over bare file links.
 
 Write `codebase-compass/<topic>/<topic>.md`.
 
-Required sections:
+Required sections (each topic should read like a mini system report):
 
-1. **Concept** — what this subsystem does in the codebase.
-2. **Flow** — step-by-step explanation of how it works.
-3. **Real code references** — clickable links to actual source files.
+1. **Concept** — what this subsystem is, what problem it solves, and where it sits in the system.
+2. **Responsibility Boundaries** — what this module owns and explicitly does **not** own; scope and boundaries to prevent confusion with adjacent subsystems.
+3. **Architecture Overview** — main components, layers, and internal modules (e.g., controller/service/repository).
+4. **Flow** — step-by-step runtime behavior: entry points, sequence of operations, decision branches, and async behavior.
+5. **Code References** — fully grounded, clickable links to actual source files.
+   - Prefer function-level or line-range references.
    - Format examples:
      - [`boot.js`](../src/boot.js)
      - [`boot.js`](../src/boot.js):458-619
      - [`bootGhost`](../src/boot.js):458-619
-4. **Cross-references** — links to related Compass topics, e.g. `/logging`, `/auth`, `/request-flow`.
-5. **Risks / edge cases** — what can go wrong (optional but important).
+   - Include call chains where they clarify the flow.
+6. **Data / State Model** — inputs, outputs, transformations, in-memory state, and database interactions handled by this subsystem.
+7. **Dependencies & Cross-References** — modules this subsystem depends on, modules that depend on it, external libraries involved, and coupling level. Link to related Compass topics, e.g. `/logging`, `/auth`, `/request-flow`.
+8. **Edge Cases / Failure Modes** — what breaks it, race conditions, missing-data scenarios, retry behavior, and fallback logic.
+
+Include these optional sections whenever relevant evidence exists:
+
+9. **Security / Safety Considerations** — auth checks, injection risks, privilege boundaries, and sensitive operations.
+10. **Performance Characteristics** — bottlenecks, expensive operations, caching behavior, and scaling concerns.
+11. **Observability** — logs emitted, metrics, tracing points, and debugging hooks.
 
 Rules:
 
@@ -161,6 +172,7 @@ Write `codebase-compass/codebase-view/sections/<topic>.html`.
 Requirements:
 
 - Present a simplified, navigation-friendly version of the markdown content.
+- Reflect the key sections from the knowledge file: Concept, Boundaries, Architecture, Flow, Data/State, Dependencies, Edge Cases, and any relevant optional sections.
 - Include the title and a short summary.
 - List key code references as clickable links.
 - Add a “Related topics” list linking to other sections.
