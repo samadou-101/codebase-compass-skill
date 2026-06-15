@@ -1,0 +1,16 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "command": {
+    "codebase-compass": {
+      "description": "Analyze a single codebase topic and generate a documented knowledge card plus HTML dashboard section. Usage: /codebase-compass <topic>. READ-ONLY: only writes into codebase-compass/.",
+      "template": "You are running the Codebase-Compass skill. Read the requested topic from the user's message (the word after /codebase-compass). If no topic is given or the topic is unknown, list the supported topics and ask the user to choose one.\n\nFollow the step-by-step instructions in the codebase-compass skill to:\n1. Explore the repository read-only.\n2. Extract real code evidence with exact file paths and line ranges.\n3. Generate codebase-compass/<topic>/<topic>.md.\n4. Generate codebase-compass/codebase-view/sections/<topic>.html.\n5. Create the dashboard shell files (index.html, styles.css, script.js) under codebase-compass/codebase-view/ if they do not already exist.\n6. Update codebase-compass/codebase-view/manifest.json with the new topic entry.\n\nCRITICAL: This is READ-ONLY. Do not modify, delete, rename, or move any existing source file, configuration file, or test. Only create or update files under codebase-compass/. Every claim in the generated markdown must link back to real source code. Report the generated files and a short summary when done."
+    },
+    "codebase-compass-all": {
+      "description": "Run Codebase-Compass analysis for the full topic catalog and regenerate the dashboard. READ-ONLY: only writes into codebase-compass/.",
+      "template": "You are running the Codebase-Compass skill for the full catalog. Iterate over every supported topic in the codebase-compass skill catalog and run the full pipeline for each topic sequentially.\n\nFor each topic:\n1. Explore the repository read-only for that domain.\n2. Extract real code evidence with exact file paths and line ranges.\n3. Generate codebase-compass/<topic>/<topic>.md.\n4. Generate codebase-compass/codebase-view/sections/<topic>.html.\n5. Update codebase-compass/codebase-view/manifest.json with the topic entry.\n\nAfter all topics are processed, ensure the dashboard shell files exist under codebase-compass/codebase-view/ (index.html, styles.css, script.js).\n\nCRITICAL: This is READ-ONLY. Do not modify, delete, rename, or move any existing source file, configuration file, or test. Only create or update files under codebase-compass/. Every claim in the generated markdown must link back to real source code. Report the list of generated topics and files when done."
+    }
+  },
+  "skills": {
+    "paths": [".opencode/skills"]
+  }
+}
