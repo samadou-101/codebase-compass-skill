@@ -4,7 +4,7 @@
   "description": "Convert any unknown codebase into a structured, navigable knowledge system and interactive HTML dashboard.",
   "main": "src/install.js",
   "bin": {
-    "codebase-compass": "./bin/codebase-compass.js"
+    "codebase-compass": "bin/codebase-compass.js"
   },
   "files": [
     "bin/",
