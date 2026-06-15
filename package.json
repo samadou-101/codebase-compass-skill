@@ -1,0 +1,32 @@
+{
+  "name": "codebase-compass",
+  "version": "0.1.0",
+  "description": "Convert any unknown codebase into a structured, navigable knowledge system and interactive HTML dashboard.",
+  "main": "src/install.js",
+  "bin": {
+    "codebase-compass": "./bin/codebase-compass.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "dist/"
+  ],
+  "scripts": {
+    "build": "node scripts/build.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "codebase",
+    "documentation",
+    "agent",
+    "skill",
+    "claude-code",
+    "codex",
+    "opencode"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

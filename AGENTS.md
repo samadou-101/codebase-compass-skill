@@ -11,7 +11,28 @@ Codebase-Compass converts any unknown codebase into a structured knowledge syste
 - `codebase-compass/codebase-view/styles.css` — dashboard styles
 - `codebase-compass/codebase-view/script.js` — dashboard logic
 
-## Install for different agents
+## Quick install (recommended)
+
+Run the installer in the project you want to analyze:
+
+```bash
+npx codebase-compass install
+```
+
+The installer will:
+
+- Detect which agent configuration already exists in the project (`.opencode`, `.claude`, `.codex`, or `.agents`).
+- Ask you to pick one if multiple are detected.
+- Install the Codebase-Compass skill into that agent's project-local skills directory.
+- Merge the `/codebase-compass` and `/codebase-compass-all` command blocks into `.opencode/opencode.json` for opencode.
+
+If no agent configuration is detected, the installer defaults to `.agents/skills/`.
+
+After installation, restart your agent if needed.
+
+## Manual install
+
+If you prefer to copy files manually, follow the instructions below.
 
 ### Open agents / `.agents`
 
