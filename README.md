@@ -8,15 +8,15 @@ Codebase-Compass is an installable agent skill for [opencode](https://opencode.a
 
 ```text
 codebase-compass/
-  <topic>/
-    <topic>.md                 # Detailed knowledge card
-  codebase-view/
+  00-codebase-view/
     index.html                  # Browsable dashboard shell
-    styles.css                  # Dashboard styles
-    script.js                   # Dashboard logic
+    styles.css                  # Dashboard styles (custom scrollbar)
+    script.js                   # Dashboard logic (sorts sidebar by key)
     manifest.json               # Registry of topics
     sections/
-      <topic>.html              # Dashboard section
+      NN-topic.html             # Dashboard section
+  NN-topic/
+    NN-topic.md                 # Detailed knowledge card
 ```
 
 ## Installation
@@ -78,39 +78,39 @@ Once installed, use the skill inside your agent:
 
 ## Topic catalog
 
-| Topic | Description |
-|-------|-------------|
-| `overview` | High-level system purpose and structure |
-| `folder-structure` | Directory layout and conventions |
-| `module-map` | Modules and their responsibilities |
-| `dependency-graph` | Internal and external dependencies |
-| `bootstrapping` | Application startup and initialization |
-| `entrypoints` | CLI, HTTP, job, and event entry points |
-| `request-flow` | HTTP request lifecycle |
-| `data-flow` | Data movement and transformation |
-| `async-jobs` | Background/async job processing |
-| `logging` | Logging system |
-| `error-handling` | Error handling patterns |
-| `validation` | Input validation |
-| `testing` | Test structure and conventions |
-| `security` | Security controls and concerns |
-| `auth` | Authentication |
-| `authorization` | Authorization |
-| `secrets` | Secrets management |
-| `threat-model` | Threat model |
-| `database-schema` | Database/schema layer |
-| `repositories` | Repository/data access patterns |
-| `transactions` | Transaction management |
-| `caching` | Caching strategy |
-| `api-overview` | API surface (REST, GraphQL, RPC, etc.) |
-| `external-integrations` | Third-party integrations |
-| `deployment` | Deployment configuration |
-| `ci-cd` | CI/CD pipelines |
-| `observability` | Metrics, tracing, monitoring |
-| `performance` | Performance patterns and concerns |
-| `domain-model` | Core domain entities and relationships |
-| `business-rules` | Business rules and invariants |
-| `feature-breakdown` | Major features and how they are implemented |
+| # | Topic | Description |
+|---|-------|-------------|
+| 01 | `system-overview` | High-level system purpose and structure |
+| 02 | `folder-structure` | Directory layout and conventions |
+| 03 | `bootstrapping` | Application startup and initialization |
+| 04 | `entrypoints` | CLI, HTTP, job, and event entry points |
+| 05 | `module-map` | Modules and their responsibilities |
+| 06 | `dependency-graph` | Internal and external dependencies |
+| 07 | `domain-model` | Core domain entities and relationships |
+| 08 | `business-rules` | Business rules and invariants |
+| 09 | `feature-breakdown` | Major features and how they are implemented |
+| 10 | `request-flow` | HTTP request lifecycle |
+| 11 | `data-flow` | Data movement and transformation |
+| 12 | `api-overview` | API surface (REST, GraphQL, RPC, etc.) |
+| 13 | `validation` | Input validation |
+| 14 | `error-handling` | Error handling patterns |
+| 15 | `logging` | Logging system |
+| 16 | `async-jobs` | Background/async job processing |
+| 17 | `database-schema` | Database/schema layer |
+| 18 | `repositories` | Repository/data access patterns |
+| 19 | `transactions` | Transaction management |
+| 20 | `caching` | Caching strategy |
+| 21 | `security` | Security controls and concerns |
+| 22 | `auth` | Authentication |
+| 23 | `authorization` | Authorization |
+| 24 | `secrets` | Secrets management |
+| 25 | `threat-model` | Threat model |
+| 26 | `external-integrations` | Third-party integrations |
+| 27 | `testing` | Test structure and conventions |
+| 28 | `deployment` | Deployment configuration |
+| 29 | `ci-cd` | CI/CD pipelines |
+| 30 | `observability` | Metrics, tracing, monitoring |
+| 31 | `performance` | Performance patterns and concerns |
 
 ## Important rules
 

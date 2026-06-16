@@ -4,12 +4,12 @@ Codebase-Compass converts any unknown codebase into a structured knowledge syste
 
 ## What gets generated
 
-- `codebase-compass/<topic>/<topic>.md` — detailed knowledge card
-- `codebase-compass/codebase-view/sections/<topic>.html` — dashboard section
-- `codebase-compass/codebase-view/manifest.json` — registry of topics
-- `codebase-compass/codebase-view/index.html` — browsable dashboard shell
-- `codebase-compass/codebase-view/styles.css` — dashboard styles
-- `codebase-compass/codebase-view/script.js` — dashboard logic
+- `codebase-compass/<NN-topic>/<NN-topic>.md` — detailed knowledge card (numbered for sort order)
+- `codebase-compass/00-codebase-view/sections/<NN-topic>.html` — dashboard section
+- `codebase-compass/00-codebase-view/manifest.json` — registry of topics
+- `codebase-compass/00-codebase-view/index.html` — browsable dashboard shell
+- `codebase-compass/00-codebase-view/styles.css` — dashboard styles (includes custom scrollbar)
+- `codebase-compass/00-codebase-view/script.js` — dashboard logic (sorts sidebar by key)
 
 ## Quick install (recommended)
 

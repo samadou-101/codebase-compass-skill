@@ -14,7 +14,7 @@ This skill is **strictly read-only** with respect to the repository under analys
 - Read source files.
 - Search, grep, and explore.
 - Generate new files under `codebase-compass/`.
-- Update `codebase-compass/codebase-view/manifest.json`.
+- Update `codebase-compass/00-codebase-view/manifest.json`.
 
 You must **NOT**:
 
@@ -41,58 +41,59 @@ Use this skill when the user wants to:
 
 ## Topic catalog
 
-Supported topics:
+Topics are numbered for deterministic sort order in folders and the sidebar. The numeric prefix (`NN`) is always used for directory names, markdown files, HTML sections, and manifest keys.
 
-- `overview` — high-level system purpose and structure
-- `folder-structure` — directory layout and conventions
-- `module-map` — modules and their responsibilities
-- `dependency-graph` — internal and external dependencies
-- `bootstrapping` — application startup and initialization
-- `entrypoints` — CLI, HTTP, job, and event entry points
-- `request-flow` — HTTP request lifecycle
-- `data-flow` — data movement and transformation
-- `async-jobs` — background/async job processing
-- `logging` — logging system
-- `error-handling` — error handling patterns
-- `validation` — input validation
-- `testing` — test structure and conventions
-- `security` — security controls and concerns
-- `auth` — authentication
-- `authorization` — authorization
-- `secrets` — secrets management
-- `threat-model` — threat model
-- `database-schema` — database/schema layer
-- `repositories` — repository/data access patterns
-- `transactions` — transaction management
-- `caching` — caching strategy
-- `api-overview` — API surface (REST, GraphQL, RPC, etc.)
-- `external-integrations` — third-party integrations
-- `deployment` — deployment configuration
-- `ci-cd` — CI/CD pipelines
-- `observability` — metrics, tracing, monitoring
-- `performance` — performance patterns and concerns
-- `domain-model` — core domain entities and relationships
-- `business-rules` — business rules and invariants
-- `feature-breakdown` — major features and how they are implemented
+- `00-codebase-view` — browsable dashboard shell (always first)
+- `01-system-overview` — high-level system purpose and structure
+- `02-folder-structure` — directory layout and conventions
+- `03-bootstrapping` — application startup and initialization
+- `04-entrypoints` — CLI, HTTP, job, and event entry points
+- `05-module-map` — modules and their responsibilities
+- `06-dependency-graph` — internal and external dependencies
+- `07-domain-model` — core domain entities and relationships
+- `08-business-rules` — business rules and invariants
+- `09-feature-breakdown` — major features and how they are implemented
+- `10-request-flow` — HTTP request lifecycle
+- `11-data-flow` — data movement and transformation
+- `12-api-overview` — API surface (REST, GraphQL, RPC, etc.)
+- `13-validation` — input validation
+- `14-error-handling` — error handling patterns
+- `15-logging` — logging system
+- `16-async-jobs` — background/async job processing
+- `17-database-schema` — database/schema layer
+- `18-repositories` — repository/data access patterns
+- `19-transactions` — transaction management
+- `20-caching` — caching strategy
+- `21-security` — security controls and concerns
+- `22-auth` — authentication
+- `23-authorization` — authorization
+- `24-secrets` — secrets management
+- `25-threat-model` — threat model
+- `26-external-integrations` — third-party integrations
+- `27-testing` — test structure and conventions
+- `28-deployment` — deployment configuration
+- `29-ci-cd` — CI/CD pipelines
+- `30-observability` — metrics, tracing, monitoring
+- `31-performance` — performance patterns and concerns
 
 ## Output structure
 
-All generated artifacts live under `codebase-compass/`:
+All generated artifacts live under `codebase-compass/`. Topic folders use the numbered prefix `NN-` for deterministic sort order:
 
 ```text
 codebase-compass/
-  <topic>/
-    <topic>.md
-  codebase-view/
+  00-codebase-view/
     index.html
     styles.css
     script.js
     manifest.json
     sections/
-      <topic>.html
+      NN-topic.html
+  NN-topic/
+    NN-topic.md
 ```
 
-If `codebase-view/index.html`, `styles.css`, or `script.js` do not exist, create them with a simple, dependency-free dashboard shell.
+If `00-codebase-view/index.html`, `styles.css`, or `script.js` do not exist, create them with a dependency-free dashboard shell that includes a fixed sidebar and custom scrollbar styling (see Step 7).
 
 ## Execution pipeline (deterministic)
 
@@ -104,10 +105,11 @@ From the user message, extract the topic deterministically:
 
 - If the message starts with `/codebase-compass `, the topic is the next whitespace-separated word (e.g., `/codebase-compass logging` → `logging`).
 - If the message does not start with `/codebase-compass `, the topic is the first whitespace-separated word of the message.
-- Treat the extracted topic as case-insensitive, but use the canonical lowercase form from the catalog for file paths and manifest entries.
-- For `/codebase-compass-all`, do not extract a single topic; iterate over the full catalog instead.
+- Treat the extracted topic as case-insensitive.
+- **Map the extracted slug to its numbered form.** The user provides the short slug (e.g., `logging`, `overview`); the agent uses the `NN-topic` form from the catalog for all file paths (e.g., `15-logging`, `01-system-overview`).
+- For `/codebase-compass-all`, do not extract a single topic; iterate over the full catalog and use each numbered entry.
 
-If the topic is missing, empty, unknown, or not in the supported catalog below, respond with the supported catalog and ask the user to pick one. Do not proceed without a valid topic.
+If the topic is missing, empty, unknown, or not in the supported catalog, respond with the supported catalog and ask the user to pick one. Do not proceed without a valid topic.
 
 ### Step 2 — Explore the repository
 
@@ -134,7 +136,7 @@ Always prefer function-level or line-range references over bare file links.
 
 ### Step 4 — Generate the knowledge file
 
-Write `codebase-compass/<topic>/<topic>.md`.
+Write `codebase-compass/<NN-topic>/<NN-topic>.md` (where `NN-topic` is the numbered form from the catalog).
 
 Required sections (each topic should read like a polished, easy-to-scan mini system report):
 
@@ -145,9 +147,9 @@ Required sections (each topic should read like a polished, easy-to-scan mini sys
 5. **Code References** — fully grounded, clickable links to actual source files.
    - Prefer function-level or line-range references.
    - Format examples:
-     - [`boot.js`](../src/boot.js)
-     - [`boot.js`](../src/boot.js):458-619
-     - [`bootGhost`](../src/boot.js):458-619
+     - [`boot.js`](../../src/boot.js)
+     - [`boot.js`](../../src/boot.js):458-619
+     - [`bootGhost`](../../src/boot.js):458-619
    - Include call chains where they clarify the flow.
 6. **Data / State Model** — inputs, outputs, transformations, in-memory state, and database interactions handled by this subsystem.
 7. **Dependencies & Cross-References** — modules this subsystem depends on, modules that depend on it, external libraries involved, and coupling level. Link to related Compass topics, e.g. `/logging`, `/auth`, `/request-flow`.
@@ -180,11 +182,11 @@ Rules:
 
 - Every claim must be traceable to real source code.
 - No abstract explanation without a source link.
-- Use relative paths from `codebase-compass/<topic>/<topic>.md` back to the source file.
+- Use relative paths from `codebase-compass/<NN-topic>/<NN-topic>.md` back to the source file.
 
 ### Step 5 — Generate the visualization file
 
-Write `codebase-compass/codebase-view/sections/<topic>.html`.
+Write `codebase-compass/00-codebase-view/sections/<NN-topic>.html`.
 
 Requirements:
 
@@ -192,37 +194,93 @@ Requirements:
 - Reflect the key sections from the knowledge file: Concept, Boundaries, Architecture, Flow, Data/State, Dependencies, Edge Cases, and any relevant optional sections.
 - Include the title and a short summary.
 - List key code references as clickable links.
-- Add a “Related topics” list linking to other sections.
+- Add a "Related topics" list linking to other sections.
 - Keep styling inline or use the shared `styles.css`.
 - Do not add external dependencies; keep it plain HTML/CSS/JS.
 
 ### Step 6 — Update the registry
 
-Read `codebase-compass/codebase-view/manifest.json`. If it does not exist, create it.
+Read `codebase-compass/00-codebase-view/manifest.json`. If it does not exist, create it.
 
-Add or update the entry for the topic:
+Add or update the entry for the topic using the numbered form as the key:
 
 ```json
 {
-  "<topic>": {
+  "<NN-topic>": {
     "title": "<Human-readable title>",
-    "md": "../<topic>/<topic>.md",
-    "html": "sections/<topic>.html"
+    "md": "../<NN-topic>/<NN-topic>.md",
+    "html": "sections/<NN-topic>.html"
   }
 }
 ```
 
-Write the updated manifest back.
+Write the updated manifest back. Entries are sorted by key in the sidebar, so the numeric prefix ensures correct order.
 
 ### Step 7 — Ensure dashboard shell files exist
 
-If missing, create:
+If missing, create these files under `codebase-compass/00-codebase-view/`:
 
-- `codebase-compass/codebase-view/index.html` — dashboard shell with sidebar navigation and section loader.
-- `codebase-compass/codebase-view/styles.css` — minimal styles.
-- `codebase-compass/codebase-view/script.js` — reads `manifest.json`, injects sections, handles navigation.
+#### `index.html`
 
-These are purely representational and derived from the knowledge layer.
+Dashboard shell with a **fixed sidebar** (does not scroll with main content). Structure:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codebase Compass</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <h1>Codebase Compass</h1>
+      </div>
+      <ul id="topic-list"></ul>
+    </nav>
+    <main id="content">
+      <div id="section-container"></div>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+```
+
+#### `styles.css`
+
+Must include:
+1. **Custom scrollbar** styling for both sidebar and content area (use `::-webkit-scrollbar` for WebKit and `scrollbar-width`/`scrollbar-color` for Firefox).
+2. **Fixed sidebar**: `position: fixed; top: 0; left: 0; height: 100vh;` with `overflow-y: auto` for internal scrolling.
+3. **Content area**: `margin-left` equal to sidebar width, `overflow-y: auto; height: 100vh;`.
+4. Dark theme with good contrast.
+
+Example scrollbar styles:
+
+```css
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #555 #1a1a2e;
+}
+*::-webkit-scrollbar { width: 8px; }
+*::-webkit-scrollbar-track { background: #1a1a2e; border-radius: 4px; }
+*::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
+*::-webkit-scrollbar-thumb:hover { background: #777; }
+```
+
+#### `script.js`
+
+Must:
+1. Fetch `manifest.json`.
+2. **Sort topic entries by key** (alphabetically, so the numeric prefix orders them correctly).
+3. Render the sorted list in the sidebar.
+4. On click, load the corresponding HTML section into the content area.
+5. Highlight the active topic in the sidebar.
+
+These files are purely representational and derived from the knowledge layer. Do not add external dependencies.
 
 ### Step 8 — Report completion
 
@@ -231,14 +289,14 @@ Tell the user:
 - Which topic(s) were analyzed.
 - Path to the generated markdown file(s).
 - Path to the generated HTML section(s).
-- How to open the dashboard (`codebase-compass/codebase-view/index.html`).
+- How to open the dashboard (`codebase-compass/00-codebase-view/index.html`).
 - Any important caveats or files that could not be analyzed.
 
 ## Traceability rules (critical)
 
 > Every claim MUST be traceable to real source code.
 
-- Use file references in this form: [`symbolName`](../path/to/file.js):start-end
+- Use file references in this form: [`symbolName`](../../path/to/file.js):start-end
 - Prefer function-level linking.
 - Multiple references are allowed and encouraged in flows.
 - Do not invent references. If you cannot find evidence, state that explicitly.
@@ -252,21 +310,21 @@ Link to other Compass topics using absolute topic paths:
 - `/request-flow`
 - `/database-schema`
 
-In HTML sections, convert these to relative section links: `./sections/logging.html`.
+In HTML sections, convert these to relative section links using the numbered form: `./sections/15-logging.html`.
 
 ## Example reference formats
 
 ```text
 Before any request is served, initialization happens in
-[`boot.js`](../src/boot.js):458-619 (`bootGhost`).
+[`boot.js`](../../src/boot.js):458-619 (`bootGhost`).
 ```
 
 ```text
-Routes are registered in [`routes.js`](../src/routes.js):12-34.
+Routes are registered in [`routes.js`](../../src/routes.js):12-34.
 ```
 
 ## Risk handling
 
-- If a topic does not apply to the repo (e.g., no caching layer), still generate a brief `<topic>.md` explaining that no evidence was found and listing files you checked.
+- If a topic does not apply to the repo (e.g., no caching layer), still generate a brief `<NN-topic>.md` explaining that no evidence was found and listing files you checked.
 - If you cannot determine line ranges, use file-level links and explain why.
 - Never hallucinate code references.
