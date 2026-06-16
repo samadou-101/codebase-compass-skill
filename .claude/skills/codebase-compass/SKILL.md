@@ -145,11 +145,13 @@ Required sections (each topic should read like a polished, easy-to-scan mini sys
 3. **Architecture Overview** — main components, layers, and internal modules (e.g., controller/service/repository).
 4. **Flow** — step-by-step runtime behavior: entry points, sequence of operations, decision branches, and async behavior.
 5. **Code References** — fully grounded, clickable links to actual source files.
+   - **Every file reference MUST be a clickable markdown link** that opens the file when clicked.
    - Prefer function-level or line-range references.
    - Format examples:
      - [`boot.js`](../../src/boot.js)
      - [`boot.js`](../../src/boot.js):458-619
      - [`bootGhost`](../../src/boot.js):458-619
+   - Line numbers must be placed **after** the link (not part of the URL) so the link still opens the file.
    - Include call chains where they clarify the flow.
 6. **Data / State Model** — inputs, outputs, transformations, in-memory state, and database interactions handled by this subsystem.
 7. **Dependencies & Cross-References** — modules this subsystem depends on, modules that depend on it, external libraries involved, and coupling level. Link to related Compass topics, e.g. `/logging`, `/auth`, `/request-flow`.
@@ -182,6 +184,7 @@ Rules:
 
 - Every claim must be traceable to real source code.
 - No abstract explanation without a source link.
+- **All file references must be clickable markdown links** (`[text](relative-path)`). Bare inline code or plain-text paths are not allowed — they must be wrapped in link syntax so clicking opens the file.
 - Use relative paths from `codebase-compass/<NN-topic>/<NN-topic>.md` back to the source file.
 
 ### Step 5 — Generate the visualization file
@@ -297,6 +300,7 @@ Tell the user:
 > Every claim MUST be traceable to real source code.
 
 - Use file references in this form: [`symbolName`](../../path/to/file.js):start-end
+- **Every file reference MUST be a proper markdown link** (`[text](path)`), never plain text. This ensures clicking the link opens the file in the editor/OS.
 - Prefer function-level linking.
 - Multiple references are allowed and encouraged in flows.
 - Do not invent references. If you cannot find evidence, state that explicitly.
