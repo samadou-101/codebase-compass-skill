@@ -44,6 +44,22 @@ function copyRecursive(source, target) {
   fs.cpSync(source, target, { recursive: true, force: true });
 }
 
+function copyIfChanged(source, target) {
+  if (!fs.existsSync(source)) {
+    return false;
+  }
+  const sourceContent = fs.readFileSync(source);
+  if (fs.existsSync(target)) {
+    const targetContent = fs.readFileSync(target);
+    if (Buffer.compare(sourceContent, targetContent) === 0) {
+      return false;
+    }
+  }
+  ensureDir(path.dirname(target));
+  fs.writeFileSync(target, sourceContent);
+  return true;
+}
+
 function detectAgents(targetRoot) {
   return AGENTS.filter((agent) => fs.existsSync(path.join(targetRoot, agent.marker)));
 }
@@ -64,7 +80,7 @@ function writeJson(filePath, data) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2) + '\n', 'utf8');
 }
 
-function mergeOpencodeConfig(targetRoot) {
+function buildMergedOpencodeConfig(targetRoot) {
   const sourcePath = path.join(__dirname, '..', 'dist', 'opencode', 'opencode.json');
   const targetPath = path.join(targetRoot, '.opencode', 'opencode.json');
 
@@ -75,7 +91,6 @@ function mergeOpencodeConfig(targetRoot) {
   const sourceConfig = readJson(sourcePath);
   const targetConfig = readJson(targetPath, { $schema: 'https://opencode.ai/config.json' });
 
-  // Override command entries for codebase-compass.
   targetConfig.command = targetConfig.command || {};
   if (sourceConfig.command) {
     for (const [key, value] of Object.entries(sourceConfig.command)) {
@@ -83,7 +98,6 @@ function mergeOpencodeConfig(targetRoot) {
     }
   }
 
-  // Ensure the local skills path is registered without removing others.
   targetConfig.skills = targetConfig.skills || {};
   targetConfig.skills.paths = targetConfig.skills.paths || [];
   const localSkillsPath = '.opencode/skills';
@@ -91,8 +105,29 @@ function mergeOpencodeConfig(targetRoot) {
     targetConfig.skills.paths.push(localSkillsPath);
   }
 
+  return { targetPath, targetConfig };
+}
+
+function mergeOpencodeConfig(targetRoot) {
+  const { targetPath, targetConfig } = buildMergedOpencodeConfig(targetRoot);
   writeJson(targetPath, targetConfig);
   console.log(`  Merged commands into ${path.relative(targetRoot, targetPath)}`);
+}
+
+function mergeOpencodeConfigIfChanged(targetRoot) {
+  const { targetPath, targetConfig } = buildMergedOpencodeConfig(targetRoot);
+  const newContent = JSON.stringify(targetConfig, null, 2) + '\n';
+  if (fs.existsSync(targetPath)) {
+    const currentContent = fs.readFileSync(targetPath, 'utf8');
+    if (currentContent === newContent) {
+      console.log(`  ${path.relative(targetRoot, targetPath)} already up to date`);
+      return false;
+    }
+  }
+  ensureDir(path.dirname(targetPath));
+  fs.writeFileSync(targetPath, newContent, 'utf8');
+  console.log(`  Updated ${path.relative(targetRoot, targetPath)}`);
+  return true;
 }
 
 async function installAgent(targetRoot, agent) {
@@ -108,6 +143,87 @@ async function installAgent(targetRoot, agent) {
 
   if (agent.key === 'opencode') {
     mergeOpencodeConfig(targetRoot);
+  }
+}
+
+function mirrorDir(sourceDir, targetDir) {
+  let copied = 0;
+  let skipped = 0;
+  let removed = 0;
+
+  if (!fs.existsSync(sourceDir)) {
+    return { copied, skipped, removed };
+  }
+
+  ensureDir(targetDir);
+
+  const sourceEntries = fs.readdirSync(sourceDir, { withFileTypes: true });
+  const sourceNames = new Set();
+
+  for (const entry of sourceEntries) {
+    const srcPath = path.join(sourceDir, entry.name);
+    const tgtPath = path.join(targetDir, entry.name);
+    sourceNames.add(entry.name);
+
+    if (entry.isDirectory()) {
+      const sub = mirrorDir(srcPath, tgtPath);
+      copied += sub.copied;
+      skipped += sub.skipped;
+      removed += sub.removed;
+    } else {
+      if (copyIfChanged(srcPath, tgtPath)) {
+        copied++;
+      } else {
+        skipped++;
+      }
+    }
+  }
+
+  if (fs.existsSync(targetDir)) {
+    const targetEntries = fs.readdirSync(targetDir, { withFileTypes: true });
+    for (const entry of targetEntries) {
+      if (!sourceNames.has(entry.name)) {
+        const tgtPath = path.join(targetDir, entry.name);
+        fs.rmSync(tgtPath, { recursive: true, force: true });
+        removed++;
+      }
+    }
+  }
+
+  return { copied, skipped, removed };
+}
+
+async function updateAgent(targetRoot, agent) {
+  if (!fs.existsSync(agent.sourceSkillDir)) {
+    throw new Error(
+      `Distribution files for ${agent.label} not found at ${agent.sourceSkillDir}. Run \`npm run build\` first.`
+    );
+  }
+
+  const targetSkillDir = agent.targetSkillDir(targetRoot);
+
+  const sourceSkillMd = path.join(agent.sourceSkillDir, 'SKILL.md');
+  const targetSkillMd = path.join(targetSkillDir, 'SKILL.md');
+  if (copyIfChanged(sourceSkillMd, targetSkillMd)) {
+    console.log(`  Updated SKILL.md`);
+  } else {
+    console.log(`  SKILL.md unchanged`);
+  }
+
+  const sourceAssets = path.join(agent.sourceSkillDir, 'assets');
+  const targetAssets = path.join(targetSkillDir, 'assets');
+  if (fs.existsSync(sourceAssets)) {
+    const stats = mirrorDir(sourceAssets, targetAssets);
+    if (stats.copied > 0) console.log(`  Copied ${stats.copied} asset(s)`);
+    if (stats.removed > 0) console.log(`  Removed ${stats.removed} stale asset(s)`);
+    if (stats.copied === 0 && stats.removed === 0) console.log(`  Assets unchanged`);
+  } else if (fs.existsSync(targetAssets)) {
+    fs.rmSync(targetAssets, { recursive: true, force: true });
+    console.log(`  Removed assets directory (no longer in source)`);
+  }
+
+  if (agent.key === 'opencode') {
+    mergeOpencodeConfigIfChanged(targetRoot);
   }
 }
 
@@ -134,4 +250,39 @@ async function runInstall(targetRoot = process.cwd()) {
   console.log('Usage: /codebase-compass <topic> or /codebase-compass-all');
 }
 
-module.exports = { runInstall, AGENTS, detectAgents, installAgent };
+async function runUpdate(targetRoot = process.cwd()) {
+  console.log(`Updating Codebase-Compass in ${targetRoot}\n`);
+
+  const detected = detectAgents(targetRoot);
+  let selectedAgent;
+
+  if (detected.length === 0) {
+    selectedAgent = AGENTS.find((a) => a.key === 'agents');
+    console.log('No agent configuration detected. Defaulting to .agents.\n');
+  } else if (detected.length === 1) {
+    selectedAgent = detected[0];
+    console.log(`Detected ${selectedAgent.label} configuration.\n`);
+  } else {
+    selectedAgent = await pickAgent(detected);
+    console.log('');
+  }
+
+  await updateAgent(targetRoot, selectedAgent);
+
+  console.log(`\nCodebase-Compass updated for ${selectedAgent.label}.`);
+  console.log('Generated codebase-compass/ output was not modified.');
+}
+
+module.exports = {
+  runInstall,
+  runUpdate,
+  AGENTS,
+  detectAgents,
+  installAgent,
+  updateAgent,
+  copyIfChanged,
+  mirrorDir,
+  mergeOpencodeConfig,
+  mergeOpencodeConfigIfChanged,
+  buildMergedOpencodeConfig,
+};

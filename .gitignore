@@ -5,3 +5,7 @@ dist/
 .DS_Store
 
 .todo
+
+# OpenSpec development tooling (not for publishing)
+.opencode/commands/
+.opencode/skills/openspec-*/

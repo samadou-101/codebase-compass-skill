@@ -10,8 +10,8 @@ Codebase-Compass is an installable agent skill for [opencode](https://opencode.a
 codebase-compass/
   00-codebase-view/
     index.html                  # Browsable dashboard shell
-    styles.css                  # Dashboard styles (custom scrollbar)
-    script.js                   # Dashboard logic (sorts sidebar by key)
+    styles.css                  # Dashboard styles (copied from assets/dashboard.css)
+    script.js                   # Dashboard logic (theme toggle, sorts sidebar by key)
     manifest.json               # Registry of topics
     sections/
       NN-topic.html             # Dashboard section
@@ -39,6 +39,14 @@ The installer will:
 If no agent configuration is detected, it defaults to `.agents/skills/`.
 
 After installation, restart your agent if needed.
+
+### Update an existing installation
+
+```bash
+npx codebase-compass update
+```
+
+The update command refreshes `SKILL.md` and `assets/` in the installed skill directory without touching your generated `codebase-compass/` output. For opencode, it also merges command blocks into `.opencode/opencode.json` only when the result differs.
 
 ### Manual install
 
@@ -75,6 +83,16 @@ Once installed, use the skill inside your agent:
 
 - `/codebase-compass <topic>` — analyze one topic, e.g. `/codebase-compass request-flow`
 - `/codebase-compass-all` — analyze the full catalog
+
+## Dashboard theming
+
+The generated dashboard supports light and dark themes:
+
+- **Light mode** is the default on first load.
+- Click the toggle button (☀️/🌙) in the sidebar header to switch themes.
+- Your preference is persisted in `localStorage`.
+
+Styles are maintained in the skill's `assets/dashboard.css` file using CSS custom properties. When the agent creates the dashboard, it copies this file into `codebase-compass/00-codebase-view/styles.css`.
 
 ## Topic catalog
 

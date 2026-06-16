@@ -8,8 +8,8 @@ Codebase-Compass converts any unknown codebase into a structured knowledge syste
 - `codebase-compass/00-codebase-view/sections/<NN-topic>.html` — dashboard section
 - `codebase-compass/00-codebase-view/manifest.json` — registry of topics
 - `codebase-compass/00-codebase-view/index.html` — browsable dashboard shell
-- `codebase-compass/00-codebase-view/styles.css` — dashboard styles (includes custom scrollbar)
-- `codebase-compass/00-codebase-view/script.js` — dashboard logic (sorts sidebar by key)
+- `codebase-compass/00-codebase-view/styles.css` — dashboard styles (copied from `assets/dashboard.css`)
+- `codebase-compass/00-codebase-view/script.js` — dashboard logic (sorts sidebar by key, theme toggle)
 
 ## Quick install (recommended)
 
@@ -29,6 +29,30 @@ The installer will:
 If no agent configuration is detected, the installer defaults to `.agents/skills/`.
 
 After installation, restart your agent if needed.
+
+## Update an existing installation
+
+```bash
+npx codebase-compass update
+```
+
+The update command will:
+
+- Detect which agent configuration to update (same logic as `install`).
+- Copy `SKILL.md` only if its content has changed.
+- Mirror the `assets/` directory into the installed skill (add new, update changed, remove stale).
+- For opencode, merge command blocks and `skills.paths` into `.opencode/opencode.json` only if the merged result differs.
+- Never modify files under `codebase-compass/` (your generated output is safe).
+
+## Dashboard theming
+
+The dashboard ships with a light/dark theme toggle:
+
+- **Light mode** is the default on first load.
+- Click the toggle button (☀️/🌙) in the sidebar header to switch themes.
+- Your preference is persisted in `localStorage`.
+
+Styles are maintained in the skill's `assets/dashboard.css` file, which uses CSS custom properties for theming. When the agent creates the dashboard, it copies this file into `codebase-compass/00-codebase-view/styles.css`.
 
 ## Manual install
 

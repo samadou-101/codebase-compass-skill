@@ -93,6 +93,8 @@ codebase-compass/
     NN-topic.md
 ```
 
+The skill also ships with a canonical `assets/dashboard.css` file located next to `SKILL.md`. This file contains the full dashboard stylesheet with light/dark theme support. When creating the dashboard shell, copy `assets/dashboard.css` into `codebase-compass/00-codebase-view/styles.css` instead of generating styles inline.
+
 If `00-codebase-view/index.html`, `styles.css`, or `script.js` do not exist, create them with a dependency-free dashboard shell that includes a fixed sidebar and custom scrollbar styling (see Step 7).
 
 ## Execution pipeline (deterministic)
@@ -148,9 +150,9 @@ Required sections (each topic should read like a polished, easy-to-scan mini sys
    - **Every file reference MUST be a clickable markdown link** that opens the file when clicked.
    - Prefer function-level or line-range references.
    - Format examples:
-     - [`boot.js`](../../src/boot.js)
-     - [`boot.js`](../../src/boot.js):458-619
-     - [`bootGhost`](../../src/boot.js):458-619
+      - [`boot.js`](../../src/boot.js)
+      - [`boot.js`](../../src/boot.js):458-619
+      - [`bootGhost`](../../src/boot.js):458-619
    - Line numbers must be placed **after** the link (not part of the URL) so the link still opens the file.
    - Include call chains where they clarify the flow.
 6. **Data / State Model** — inputs, outputs, transformations, in-memory state, and database interactions handled by this subsystem.
@@ -197,7 +199,7 @@ Requirements:
 - Reflect the key sections from the knowledge file: Concept, Boundaries, Architecture, Flow, Data/State, Dependencies, Edge Cases, and any relevant optional sections.
 - Include the title and a short summary.
 - List key code references as clickable links.
-- Add a "Related topics" list linking to other sections.
+- Add a “Related topics” list linking to other sections.
 - Keep styling inline or use the shared `styles.css`.
 - Do not add external dependencies; keep it plain HTML/CSS/JS.
 
@@ -241,6 +243,7 @@ Dashboard shell with a **fixed sidebar** (does not scroll with main content). St
     <nav id="sidebar">
       <div class="sidebar-header">
         <h1>Codebase Compass</h1>
+        <button id="theme-toggle" class="theme-toggle" title="Toggle theme">☀️</button>
       </div>
       <ul id="topic-list"></ul>
     </nav>
@@ -255,24 +258,7 @@ Dashboard shell with a **fixed sidebar** (does not scroll with main content). St
 
 #### `styles.css`
 
-Must include:
-1. **Custom scrollbar** styling for both sidebar and content area (use `::-webkit-scrollbar` for WebKit and `scrollbar-width`/`scrollbar-color` for Firefox).
-2. **Fixed sidebar**: `position: fixed; top: 0; left: 0; height: 100vh;` with `overflow-y: auto` for internal scrolling.
-3. **Content area**: `margin-left` equal to sidebar width, `overflow-y: auto; height: 100vh;`.
-4. Dark theme with good contrast.
-
-Example scrollbar styles:
-
-```css
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #555 #1a1a2e;
-}
-*::-webkit-scrollbar { width: 8px; }
-*::-webkit-scrollbar-track { background: #1a1a2e; border-radius: 4px; }
-*::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
-*::-webkit-scrollbar-thumb:hover { background: #777; }
-```
+Copy the skill's `assets/dashboard.css` file into `codebase-compass/00-codebase-view/styles.css`. This file provides the complete dashboard stylesheet with light and dark theme support via CSS custom properties, a purple accent palette, custom scrollbar styling, and all section styles. Do not generate styles inline — use the canonical asset.
 
 #### `script.js`
 
@@ -282,6 +268,9 @@ Must:
 3. Render the sorted list in the sidebar.
 4. On click, load the corresponding HTML section into the content area.
 5. Highlight the active topic in the sidebar.
+6. Implement theme toggle logic:
+   - On load, read `localStorage.getItem('theme')` and set `document.documentElement.dataset.theme` accordingly (default to `"light"`).
+   - When the `#theme-toggle` button is clicked, toggle between `"light"` and `"dark"`, update `document.documentElement.dataset.theme`, update the button label (☀️/🌙), and persist the choice to `localStorage`.
 
 These files are purely representational and derived from the knowledge layer. Do not add external dependencies.
 
