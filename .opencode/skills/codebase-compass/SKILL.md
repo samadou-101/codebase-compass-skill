@@ -203,8 +203,7 @@ Requirements:
 - Present a simplified, navigation-friendly version of the markdown content.
 - Reflect the key sections from the knowledge file: Concept, Boundaries, Architecture, Flow, Data/State, Dependencies, Edge Cases, and any relevant optional sections.
 - Include the title and a short summary.
-- List key code references as clickable links.
-- Add a “Related topics” list linking to other sections.
+- List key code references as plain text (filename:lines). Do NOT wrap file references in clickable `<a>` tags.
 - Keep styling inline or use the shared `styles.css`.
 - Do not add external dependencies; keep it plain HTML/CSS/JS.
 
@@ -272,8 +271,6 @@ Link to other Compass topics using absolute topic paths:
 - `/auth`
 - `/request-flow`
 - `/database-schema`
-
-In HTML sections, convert these to relative section links using the numbered form: `./sections/15-logging.html`.
 
 ## Example reference formats
 

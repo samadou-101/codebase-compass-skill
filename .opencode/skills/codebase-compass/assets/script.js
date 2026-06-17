@@ -7,6 +7,7 @@
   const SECTION_CONTAINER = document.getElementById('section-container');
   const THEME_TOGGLE = document.getElementById('theme-toggle');
   const REPO_TITLE = document.getElementById('repo-title');
+  const mermaidSources = [];
 
   function getStoredTheme() {
     try {
@@ -16,12 +17,32 @@
     }
   }
 
+  function initMermaid() {
+    if (typeof mermaid === 'undefined') return;
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'base',
+    });
+  }
+
+  function reRenderMermaid() {
+    mermaidSources.forEach(({ id, text }) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      mermaid.render('svg-' + id, text).then(({ svg }) => {
+        el.innerHTML = svg;
+      });
+    });
+  }
+
   function setTheme(theme) {
     document.documentElement.dataset.theme = theme;
     THEME_TOGGLE.textContent = theme === 'dark' ? '\u{1F319}' : '\u{2600}\u{FE0F}';
     try {
       localStorage.setItem('theme', theme);
     } catch { /* ignore */ }
+    initMermaid();
+    reRenderMermaid();
   }
 
   function toggleTheme() {
@@ -87,7 +108,12 @@
         return;
       }
       const html = await res.text();
-      SECTION_CONTAINER.innerHTML = html;
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = html;
+      const body = wrapper.querySelector('body');
+      SECTION_CONTAINER.innerHTML = body
+        ? '<div class="section">' + body.innerHTML + '</div>'
+        : '<div class="section">' + html + '</div>';
       renderMermaidDiagrams();
     } catch {
       SECTION_CONTAINER.innerHTML =
@@ -96,15 +122,33 @@
   }
 
   function renderMermaidDiagrams() {
+    if (typeof mermaid === 'undefined') return;
+    initMermaid();
+
+    const preBlocks = SECTION_CONTAINER.querySelectorAll('pre.mermaid');
+    if (preBlocks.length > 0) {
+      preBlocks.forEach((pre, i) => {
+        const container = document.createElement('div');
+        container.className = 'mermaid';
+        container.id = 'mermaid-pre-' + i;
+        pre.replaceWith(container);
+        mermaidSources.push({ id: 'mermaid-pre-' + i, text: pre.textContent });
+        mermaid.render('mermaid-svg-' + i, pre.textContent).then(({ svg }) => {
+          container.innerHTML = svg;
+        });
+      });
+      return;
+    }
+
     const mermaidBlocks = SECTION_CONTAINER.querySelectorAll('code.language-mermaid');
     if (mermaidBlocks.length === 0) return;
-    if (typeof mermaid === 'undefined') return;
     mermaidBlocks.forEach((block, i) => {
       const pre = block.parentElement;
       const container = document.createElement('div');
-      container.classList.add('mermaid');
+      container.className = 'mermaid';
       container.id = 'mermaid-' + i;
       pre.replaceWith(container);
+      mermaidSources.push({ id: 'mermaid-' + i, text: block.textContent });
       mermaid.render('mermaid-svg-' + i, block.textContent).then(({ svg }) => {
         container.innerHTML = svg;
       });

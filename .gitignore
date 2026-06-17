@@ -5,7 +5,7 @@ dist/
 .DS_Store
 
 .todo
-
+skill-update.md
 # OpenSpec development tooling (not for publishing)
 .opencode/commands/
 .opencode/skills/openspec-*/
