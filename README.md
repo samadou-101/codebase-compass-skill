@@ -38,7 +38,7 @@ The installer will:
 
 If no agent configuration is detected, it defaults to `.agents/skills/`.
 
-After installation, restart your agent if needed.
+After installation, restart your agent if needed. Dashboard files (`index.html`, `styles.css`, `script.js`) are copied from `assets/` into the generated `codebase-compass/00-codebase-view/` on first use.
 
 ### Update an existing installation
 
@@ -46,7 +46,7 @@ After installation, restart your agent if needed.
 npx codebase-compass update
 ```
 
-The update command refreshes `SKILL.md` and `assets/` in the installed skill directory without touching your generated `codebase-compass/` content. For opencode, it also merges command blocks into `.opencode/opencode.json` only when the result differs. Dashboard styles (`styles.css`) and `index.html` are automatically refreshed to match the latest assets.
+The update command refreshes `SKILL.md` and `assets/` (including `dashboard.css`, `index.html`, `script.js`) in the installed skill directory without touching your generated `codebase-compass/` content. For opencode, it also merges command blocks into `.opencode/opencode.json` only when the result differs. Dashboard files (`styles.css`, `index.html`, `script.js`) under `codebase-compass/00-codebase-view/` are automatically refreshed to match the latest assets if present.
 
 ### Manual install
 

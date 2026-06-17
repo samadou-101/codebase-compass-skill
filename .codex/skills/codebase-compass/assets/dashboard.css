@@ -168,21 +168,51 @@ body {
   max-width: 100%;
 }
 
-/* Section styles */
+/* Links — enhanced, no default browser underline */
+.section a,
+.section a:link,
+.section a:visited,
+.section a:hover,
+.section a:active {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.section a:hover {
+  color: var(--accent-hover);
+  border-bottom-color: var(--accent-hover);
+}
+
+.section a code {
+  color: var(--accent);
+  background: var(--bg-code);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border-bottom: 1px dashed var(--accent);
+}
+
+.section a code:hover {
+  border-bottom-style: solid;
+}
+
+/* Documentation content — heading hierarchy */
 .section h1 {
   font-size: 26px;
   font-weight: 700;
   color: var(--accent);
   margin-bottom: 8px;
+  letter-spacing: -0.3px;
 }
 
 .section h2 {
   font-size: 18px;
   font-weight: 600;
   color: var(--text);
-  margin-top: 28px;
-  margin-bottom: 10px;
-  padding-bottom: 5px;
+  margin-top: 32px;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
   border-bottom: 2px solid var(--accent);
 }
 
@@ -190,36 +220,75 @@ body {
   font-size: 15px;
   font-weight: 600;
   color: var(--text);
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+.section h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
   margin-top: 20px;
   margin-bottom: 6px;
 }
 
+/* Paragraphs */
 .section p {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: var(--text);
+  line-height: 1.7;
 }
 
+/* Lists — consistent indentation and spacing */
 .section ul,
 .section ol {
-  margin-bottom: 10px;
-  padding-left: 20px;
+  margin-bottom: 12px;
+  padding-left: 24px;
+}
+
+.section ul ul,
+.section ol ol,
+.section ul ol,
+.section ol ul {
+  margin-bottom: 0;
+  margin-top: 4px;
 }
 
 .section li {
-  margin-bottom: 3px;
+  margin-bottom: 5px;
   color: var(--text);
+  line-height: 1.6;
 }
 
-.section a {
-  color: var(--accent);
-  text-decoration: none;
+.section li > p {
+  margin-bottom: 4px;
 }
 
-.section a:hover {
-  color: var(--accent-hover);
-  text-decoration: underline;
+.section li > ul,
+.section li > ol {
+  margin-top: 4px;
+  margin-bottom: 0;
 }
 
+/* Definition-style lists (used in docs for key-value pairs) */
+.section dl {
+  margin-bottom: 14px;
+  padding-left: 0;
+}
+
+.section dt {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.section dd {
+  margin-left: 20px;
+  margin-bottom: 10px;
+  color: var(--text-muted);
+}
+
+/* Code blocks — documentation style */
 .section code {
   background: var(--bg-code);
   padding: 2px 5px;
@@ -231,27 +300,32 @@ body {
 
 .section pre {
   background: var(--bg-code);
-  padding: 14px;
+  padding: 16px;
   border-radius: 6px;
   overflow-x: auto;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
 }
 
 .section pre code {
   background: none;
   padding: 0;
   color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
 }
 
+/* Tables — documentation style */
 .section table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+  font-size: 14px;
 }
 
 .section th,
 .section td {
-  padding: 8px 10px;
+  padding: 10px 12px;
   text-align: left;
   border-bottom: 1px solid var(--border);
 }
@@ -260,38 +334,66 @@ body {
   font-weight: 600;
   color: var(--accent);
   background: var(--bg);
+  white-space: nowrap;
 }
 
 .section td {
   color: var(--text);
 }
 
+.section tr:hover td {
+  background: var(--bg);
+}
+
+/* Blockquotes — callouts */
 .section blockquote {
   border-left: 3px solid var(--accent);
-  padding: 10px 14px;
-  margin-bottom: 14px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  margin-left: 0;
   background: var(--bg);
   border-radius: 0 4px 4px 0;
   color: var(--text-muted);
 }
 
+.section blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Collapsible sections */
 .section summary {
   cursor: pointer;
   font-weight: 500;
   color: var(--accent);
   margin-bottom: 6px;
+  padding: 4px 0;
 }
 
 .section details {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+  padding: 8px 0;
+}
+
+/* Horizontal rules as section dividers */
+.section hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 28px 0;
+}
+
+/* Images */
+.section img {
+  max-width: 100%;
+  border-radius: 6px;
+  margin-bottom: 12px;
 }
 
 /* Mermaid diagrams */
 .section .mermaid {
   background: var(--bg-card);
-  padding: 14px;
+  padding: 16px;
   border-radius: 6px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   text-align: center;
   border: 1px solid var(--border);
 }

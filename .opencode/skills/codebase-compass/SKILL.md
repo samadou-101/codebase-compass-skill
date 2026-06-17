@@ -94,8 +94,9 @@ codebase-compass/
 ```
 
 The skill also ships with a canonical `assets/` directory next to `SKILL.md` containing:
-- `dashboard.css` — the full dashboard stylesheet with light/dark theme support.
+- `dashboard.css` — the full dashboard stylesheet with light/dark theme support and documentation content rules.
 - `index.html` — the base dashboard shell template.
+- `script.js` — the dashboard client-side logic (manifest loading, sidebar rendering, theme toggle, section loading).
 
 When creating the dashboard shell, copy these assets into `codebase-compass/00-codebase-view/` instead of generating them inline.
 
@@ -235,19 +236,11 @@ Copy `assets/index.html` from the skill into `codebase-compass/00-codebase-view/
 
 #### `styles.css`
 
-Copy the skill's `assets/dashboard.css` file into `codebase-compass/00-codebase-view/styles.css`. This file provides the complete dashboard stylesheet with light and dark theme support via CSS custom properties, a purple accent palette, custom scrollbar styling, and all section styles. Do not generate styles inline — use the canonical asset.
+Copy the skill's `assets/dashboard.css` file into `codebase-compass/00-codebase-view/styles.css`. This file provides the complete dashboard stylesheet with light and dark theme support via CSS custom properties, a purple accent palette, custom scrollbar styling, enhanced link styles, and all documentation content rules (headings, lists, tables, code blocks, blockquotes). Do not generate styles inline — use the canonical asset.
 
 #### `script.js`
 
-Must:
-1. Fetch `manifest.json`.
-2. **Sort topic entries by key** (alphabetically, so the numeric prefix orders them correctly).
-3. Render the sorted list in the sidebar.
-4. On click, load the corresponding HTML section into the content area.
-5. Highlight the active topic in the sidebar.
-6. Implement theme toggle logic:
-   - On load, read `localStorage.getItem('theme')` and set `document.documentElement.dataset.theme` accordingly (default to `"light"`).
-   - When the `#theme-toggle` button is clicked, toggle between `"light"` and `"dark"`, update `document.documentElement.dataset.theme`, update the button label (☀️/🌙), and persist the choice to `localStorage`.
+Copy the skill's `assets/script.js` file into `codebase-compass/00-codebase-view/script.js`. This file provides the client-side dashboard logic including manifest loading, sorted sidebar rendering, section loading on click, active topic highlighting, and theme toggle with localStorage persistence. Do not generate the script inline — use the canonical asset.
 
 These files are purely representational and derived from the knowledge layer. Do not add external dependencies.
 

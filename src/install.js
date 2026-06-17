@@ -245,6 +245,16 @@ async function updateAgent(targetRoot, agent) {
       console.log(`  Dashboard index unchanged`);
     }
   }
+
+  const dashboardScript = path.join(targetRoot, 'codebase-compass', '00-codebase-view', 'script.js');
+  const sourceScriptJs = path.join(agent.sourceSkillDir, 'assets', 'script.js');
+  if (fs.existsSync(sourceScriptJs)) {
+    if (copyIfChanged(sourceScriptJs, dashboardScript)) {
+      console.log(`  Updated codebase-compass/00-codebase-view/script.js`);
+    } else {
+      console.log(`  Dashboard script unchanged`);
+    }
+  }
 }
 
 async function runInstall(targetRoot = process.cwd()) {
